@@ -1,0 +1,3 @@
+add_executable(test_default_timer test_default_timer.cpp)
+target_link_libraries(test_default_timer PRIVATE TwentyAndFiveEyeRest_defaultTimer Boost::unit_test_framework)
+add_test(NAME default_timer_tests COMMAND test_default_timer)

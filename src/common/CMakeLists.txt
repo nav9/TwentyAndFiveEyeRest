@@ -1,0 +1,2 @@
+add_library(TwentyAndFiveEyeRest_common INTERFACE)
+target_include_directories(TwentyAndFiveEyeRest_common INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
