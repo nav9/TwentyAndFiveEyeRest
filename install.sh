@@ -1,52 +1,32 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/bash
 
-echo "===== Installing TwentyAndFiveEyeRest build dependencies ====="
+# iRest Dependency Installer
 
-OS="$(lsb_release -is 2>/dev/null || uname -s)"
-VER="$(lsb_release -rs 2>/dev/null || echo "")"
+echo "Detecting Operating System..."
 
-echo "Detected OS: $OS $VER"
-
-if [[ "$OS" == "Ubuntu" || "$OS" == "Linuxmint" ]]; then
-    echo "Updating package lists..."
-    sudo add-apt-repository -y universe || true
-    sudo apt update
-
-    # Core build tools
-    sudo apt install -y \
-        build-essential \
-        gcc g++ \
-        cmake \
-        ninja-build \
-        pkg-config \
-        git
-
-    # Boost full set
-    sudo apt install -y libboost-all-dev
-
-    # Valgrind
-    sudo apt install -y valgrind
-
-    echo "Installing Qt6 for Ubuntu 22.04 (Jammy)..."
-
-    sudo apt install -y \
-        qt6-base-dev \
-        qt6-base-dev-tools \
-        qt6-tools-dev \
-        qt6-tools-dev-tools \
-        qt6-l10n-tools \
-        qt6-wayland
-
-    # Qt SVG module sometimes missing on Mint; try/catch
-    echo "Ubuntu 22.04 uses built-in Qt6 SVG — no qt6-svg-dev package required."
-
-
-    echo "Linux (Ubuntu 22.04 / Mint) installation completed."
-
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
 else
-    echo "Unsupported OS. Please install dependencies manually."
+    echo "Unsupported OS or unable to determine distribution."
     exit 1
 fi
 
-echo "===== install.sh completed successfully ====="
+echo "Detected: $OS $VER"
+
+install_linux_deps() {
+    echo "Installing dependencies for Linux..."
+    sudo apt-get update
+    sudo apt-get install -y build-essential cmake g++ \
+                            qt6-base-dev qt6-tools-dev \
+                            libboost-all-dev libgl1-mesa-dev valgrind
+    echo "Dependencies installed."
+}
+
+if [[ "$OS" == *"Ubuntu"* ]] || [[ "$OS" == *"Debian"* ]] || [[ "$OS" == *"Raspbian"* ]]; then
+    install_linux_deps
+else
+    echo "Automatic installation is currently only supported for Ubuntu/Debian based systems."
+    echo "Please ensure you have C++, CMake, Qt6, and Boost installed manually."
+fi

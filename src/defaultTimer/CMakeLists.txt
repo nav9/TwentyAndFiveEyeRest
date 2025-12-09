@@ -1,7 +1,6 @@
-add_library(TwentyAndFiveEyeRest_defaultTimer
+add_library(defaultTimer
     DefaultTimer.cpp
-    DefaultTimerState.cpp
 )
 
-target_include_directories(TwentyAndFiveEyeRest_defaultTimer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(TwentyAndFiveEyeRest_defaultTimer PUBLIC TwentyAndFiveEyeRest_common Threads::Threads)
+target_include_directories(defaultTimer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(defaultTimer PRIVATE core common platform)

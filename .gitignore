@@ -1,6 +1,7 @@
 build/
 release_versions/
-timeFiles-TwentyAndFiveEyeRest/
+timeFiles/
+logs/
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,qt,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,qt,cmake
