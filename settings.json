@@ -3,6 +3,7 @@
     "log_file_count": 3,
     "log_file_size": 5,
     "notification_interval": 2,
+    "preferred_lock_detection_method": "",
     "queue_length": 360,
     "rest_minutes": 5,
     "sample_interval": 10,

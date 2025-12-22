@@ -1,6 +1,8 @@
 #pragma once
 #include "DefaultTimer/DefaultTimer.h"
 #include "Filesystem.h"
+#include "ILockDetector.h"
+#include "IOSInfoProvider.h"
 #include "ITimeProvider.h"
 #include "Settings.h"
 #include "SystemTimeProvider.h"
@@ -35,6 +37,9 @@ private:
   std::atomic<bool> m_running;
   std::thread m_thread;
   std::shared_ptr<spdlog::logger> m_logger;
+
+  std::unique_ptr<ILockDetector> m_lockDetector;
+  std::shared_ptr<IOSInfoProvider> m_osInfo;
 };
 
 } // namespace EyeRest

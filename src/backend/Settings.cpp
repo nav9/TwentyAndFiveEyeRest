@@ -64,6 +64,11 @@ void Settings::initializeDefaults() {
   registerSetting({"log_file_count", "Log File Count",
                    "Number of rotating log files to keep", "Count",
                    SettingType::INTEGER, "", "", 3, 1, 20, "Logging"});
+  registerSetting(
+      {"preferred_lock_detection_method", "Preferred Lock Detection Method",
+       "Specific method to use for screen lock detection",
+       "One of the available probes for your OS", SettingType::STRING, "", "",
+       "", nullptr, nullptr, "Application"});
 }
 
 void Settings::load() {

@@ -6,6 +6,8 @@ target_sources(EyeRestCore PRIVATE
     Filesystem.cpp
     TimeFileManager.cpp
     DefaultTimer/DefaultTimer.cpp
+    DefaultTimer/TimerStates.cpp
+    operating_system_specific/OSInfoProvider.cpp
 )
 
 target_include_directories(EyeRestCore PUBLIC
@@ -20,13 +22,12 @@ target_link_libraries(EyeRestCore PUBLIC
 )
 
 # OS specifics
-if(LINUX)
-    # Add Linux specific sources if any
-    # target_sources(EyeRestCore PRIVATE operating_system_specific/linux/LinuxImpl.cpp)
+if(UNIX AND NOT APPLE)
+    target_sources(EyeRestCore PRIVATE operating_system_specific/LinuxLockDetector.cpp)
 elseif(WIN32)
-    # target_sources(EyeRestCore PRIVATE operating_system_specific/windows/WindowsImpl.cpp)
+    # target_sources(EyeRestCore PRIVATE operating_system_specific/WindowsLockDetector.cpp)
 elseif(APPLE)
-    # target_sources(EyeRestCore PRIVATE operating_system_specific/macos/MacOSImpl.cpp)
+    # target_sources(EyeRestCore PRIVATE operating_system_specific/MacOSLockDetector.cpp)
 endif()
 
 add_executable(TwentyAndFiveEyeRest main.cpp)

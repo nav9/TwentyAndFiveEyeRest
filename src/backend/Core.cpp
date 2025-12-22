@@ -1,8 +1,13 @@
 #include "Core.h"
 #include "Constants.h"
+#include "LockDetectorFactory.h"
+#include "TimeFileManager.h"
+#include "operating_system_specific/OSInfoProvider.h"
+#include <chrono>
 #include <iostream>
 #include <spdlog/sinks/rotating_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <thread>
 
 namespace EyeRest {
 
@@ -48,6 +53,25 @@ Core::Core(std::shared_ptr<Settings> settings, std::shared_ptr<Filesystem> fs,
     m_logger->error("Failed to setup rotating log: {}", e.what());
   }
 
+  // Initialize OS specific components
+  m_osInfo = std::make_shared<OSInfoProvider>();
+  m_lockDetector = LockDetectorFactory::createLockDetector(*m_osInfo);
+  if (m_lockDetector) {
+    std::string preferred =
+        m_settings->get<std::string>("preferred_lock_detection_method");
+    if (!preferred.empty()) {
+      m_lockDetector->setPreferredMethod(preferred);
+      m_logger->info("Lock detector initialized with preferred method: {} ({})",
+                     m_lockDetector->getDetectorName(), preferred);
+    } else {
+      m_logger->info("Lock detector initialized: {}",
+                     m_lockDetector->getDetectorName());
+    }
+  } else {
+    m_logger->warn("No lock detector available for OS: {}",
+                   m_osInfo->getOSName());
+  }
+
   // Initialize Timer. Create TimeFileManager
   auto timeFileManager =
       std::make_shared<TimeFileManager>(m_fs, m_settings, "DefaultTimer");
@@ -87,12 +111,10 @@ bool Core::isRunning() const { return m_running; }
 void Core::runLoop() {
   m_logger->info("Core orchestration loop started");
   while (m_running) {
-    // Orchestrate timers
-    // "orchestrates... by calling their runLoops and checking if they are
-    // working well" DefaultTimer has its own thread via start(). Maybe we just
-    // check its status? Or if DefaultTimer didn't have a thread, we would call
-    // runLoop() here. But I implemented threaded DefaultTimer. Let's just
-    // monitor.
+    if (m_lockDetector) {
+      bool locked = m_lockDetector->isScreenLocked();
+      m_defaultTimer->setScreenLocked(locked);
+    }
     std::this_thread::sleep_for(std::chrono::seconds(1));
   }
 }
