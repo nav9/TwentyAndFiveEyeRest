@@ -1,0 +1,12 @@
+{
+    "data_write_interval": 60,
+    "log_file_count": 3,
+    "log_file_size": 5,
+    "notification_interval": 2,
+    "queue_length": 360,
+    "rest_minutes": 5,
+    "sample_interval": 10,
+    "theme": "Dark",
+    "timer_file_max_lines": 100000,
+    "work_minutes": 20
+}
