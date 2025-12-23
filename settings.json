@@ -1,14 +1,86 @@
 {
-    "data_write_interval": 60,
-    "log_file_count": 3,
-    "log_file_size": 5,
-    "notification_interval": 2,
-    "preferred_lock_detection_method": "",
-    "queue_length": 360,
-    "rest_minutes": 5,
-    "sample_interval": 10,
-    "theme": "Dark",
-    "time_files_dir": ".",
-    "timer_file_max_lines": 100000,
-    "work_minutes": 20
+    "data_write_interval": {
+        "explanation": "Interval to write data to file",
+        "max": 600,
+        "min": 1,
+        "name": "Data Write Interval",
+        "unit": "seconds",
+        "value": 60
+    },
+    "log_file_count": {
+        "explanation": "Number of rotating log files to keep",
+        "max": 20,
+        "min": 1,
+        "name": "Log File Count",
+        "value": 3
+    },
+    "log_file_size": {
+        "explanation": "Max size of rotating log file",
+        "max": 100,
+        "min": 1,
+        "name": "Log File Size",
+        "unit": "MB",
+        "value": 5
+    },
+    "notification_interval": {
+        "explanation": "Interval between repeated notifications",
+        "max": 60,
+        "min": 1,
+        "name": "Notification Interval",
+        "unit": "minutes",
+        "value": 2
+    },
+    "preferred_lock_detection_method": {
+        "explanation": "Specific method to use for screen lock detection",
+        "name": "Preferred Lock Detection Method",
+        "value": ""
+    },
+    "queue_length": {
+        "explanation": "Length of the timestamp queue",
+        "max": 3600,
+        "min": 60,
+        "name": "Queue Length",
+        "value": 360
+    },
+    "rest_minutes": {
+        "explanation": "Duration of rest break",
+        "max": 60,
+        "min": 1,
+        "name": "Rest Minutes",
+        "unit": "minutes",
+        "value": 5
+    },
+    "sample_interval": {
+        "explanation": "Interval to sample queue",
+        "max": 60,
+        "min": 1,
+        "name": "Sample Interval",
+        "unit": "seconds",
+        "value": 10
+    },
+    "theme": {
+        "explanation": "Visual theme of the application",
+        "name": "Theme",
+        "value": "Dark"
+    },
+    "time_files_dir": {
+        "explanation": "Directory where time files are stored",
+        "name": "Time Files Directory",
+        "value": "."
+    },
+    "timer_file_max_lines": {
+        "explanation": "Max lines in timer file before archiving",
+        "max": 1000000,
+        "min": 1000,
+        "name": "Timer File Max Lines",
+        "value": 100000
+    },
+    "work_minutes": {
+        "explanation": "Duration of work before a break",
+        "max": 120,
+        "min": 1,
+        "name": "Work Minutes",
+        "unit": "minutes",
+        "value": 20
+    }
 }

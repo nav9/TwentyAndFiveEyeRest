@@ -23,7 +23,21 @@ function show_menu() {
     echo "--------------------------------"
 }
 
+function check_stale_cache() {
+    if [ -f "$BUILD_DIR/CMakeCache.txt" ]; then
+        # Check for any path mismatches that would cause CMake errors
+        # We check TwentyAndFiveEyeRest_SOURCE_DIR as a proxy for the source location
+        CACHE_SOURCE_DIR=$(grep "TwentyAndFiveEyeRest_SOURCE_DIR:STATIC=" "$BUILD_DIR/CMakeCache.txt" | cut -d'=' -f2)
+        if [ "$CACHE_SOURCE_DIR" != "$PROJECT_ROOT" ]; then
+            echo "Warning: Stale CMake cache detected (path mismatch)."
+            echo "Removing $BUILD_DIR to ensure a clean build..."
+            rm -rf "$BUILD_DIR"
+        fi
+    fi
+}
+
 function configure() {
+    check_stale_cache
     mkdir -p "$BUILD_DIR"
     if command -v ninja >/dev/null 2>&1; then
         cmake -B "$BUILD_DIR" -S "$PROJECT_ROOT" -G Ninja
@@ -34,8 +48,9 @@ function configure() {
 }
 
 function build() {
-    if [ ! -d "$BUILD_DIR" ]; then
-        echo "Build directory not found. Configuring first..."
+    check_stale_cache
+    if [ ! -d "$BUILD_DIR" ] || [ ! -f "$BUILD_DIR/build.ninja" -a ! -f "$BUILD_DIR/Makefile" ]; then
+        echo "Build directory not found, incomplete, or was stale. Configuring first..."
         configure
     fi
     cmake --build "$BUILD_DIR" --parallel $(nproc)

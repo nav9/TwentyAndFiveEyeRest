@@ -25,18 +25,15 @@ include(FetchContent)
 add_library(CLI11 INTERFACE)
 target_include_directories(CLI11 INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendor/CLI11)
 
-# spdlog - System
-find_package(spdlog REQUIRED)
+# spdlog - Vendored
+add_library(spdlog INTERFACE)
+target_include_directories(spdlog INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include)
+add_library(spdlog::spdlog ALIAS spdlog)
 
-# nlohmann_json
-FetchContent_Declare(
-    json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG v3.11.2
-    GIT_SHALLOW TRUE
-    GIT_PROGRESS TRUE
-)
-FetchContent_MakeAvailable(json)
+# nlohmann_json - Vendored
+add_library(nlohmann_json INTERFACE)
+target_include_directories(nlohmann_json INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/vendor/nlohmann/include)
+add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
 
 # Boost
 find_package(Boost REQUIRED COMPONENTS filesystem system unit_test_framework)

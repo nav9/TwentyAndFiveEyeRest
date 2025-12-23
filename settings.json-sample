@@ -1,0 +1,23 @@
+{
+    "work_minutes": {
+        "name": "Work Minutes",
+        "explanation": "Duration of work before a break",
+        "value": 20,
+        "min": 1,
+        "max": 120,
+        "unit": "minutes"
+    },
+    "rest_minutes": {
+        "name": "Rest Minutes",
+        "explanation": "Duration of rest break",
+        "value": 5,
+        "min": 1,
+        "max": 60,
+        "unit": "minutes"
+    },
+    "theme": {
+        "name": "Theme",
+        "explanation": "Visual theme of the application",
+        "value": "Dark"
+    }
+}

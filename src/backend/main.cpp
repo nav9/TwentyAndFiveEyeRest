@@ -70,6 +70,7 @@ int main(int argc, char **argv) {
 
   // Load file (overwrites defaults with file values)
   settings->load();
+  settings->save(); // Force update to new format
 
   // Apply CLI overrides (overwrites file values)
   if (logFileSize > 0) {

@@ -76,12 +76,22 @@ void Settings::load() {
   if (m_fs->fileExists(m_filePath)) {
     try {
       std::string content = m_fs->readFile(m_filePath);
-      m_values = nlohmann::json::parse(content);
+      nlohmann::json loadedJson = nlohmann::json::parse(content);
+
+      // Check if it's the new structured format or old simple format
+      for (auto it = loadedJson.begin(); it != loadedJson.end(); ++it) {
+        std::string key = it.key();
+        if (it.value().is_object() && it.value().contains("value")) {
+          // New format
+          m_values[key] = it.value()["value"];
+        } else {
+          // Old format or direct value
+          m_values[key] = it.value();
+        }
+      }
     } catch (const std::exception &e) {
       spdlog::error("Failed to parse settings file: {}. Using defaults.",
                     e.what());
-      // Reset to defaults? Or partial? For now, we trust values that are
-      // loaded, others invoke default
     }
   } else {
     spdlog::info("Settings file not found, using defaults.");
@@ -92,7 +102,24 @@ void Settings::load() {
 void Settings::save() {
   std::lock_guard<std::mutex> lock(m_mutex);
   if (m_fs) {
-    m_fs->writeToFile(m_filePath, m_values.dump(4));
+    nlohmann::json outputJson = nlohmann::json::object();
+    for (auto const &[key, def] : m_definitions) {
+      nlohmann::json entry;
+      entry["name"] = def.name;
+      entry["explanation"] = def.explanation;
+      entry["value"] =
+          m_values.contains(key) ? m_values[key] : def.defaultValue;
+
+      if (!def.minValue.is_null())
+        entry["min"] = def.minValue;
+      if (!def.maxValue.is_null())
+        entry["max"] = def.maxValue;
+      if (!def.unit.empty())
+        entry["unit"] = def.unit;
+
+      outputJson[key] = entry;
+    }
+    m_fs->writeToFile(m_filePath, outputJson.dump(4));
   }
 }
 
